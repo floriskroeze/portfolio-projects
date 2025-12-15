@@ -1,48 +1,29 @@
-import {GameText} from "./GameText";
-import {Word} from "./Word";
+import {GameInstance} from "./GameInstance";
 
 const testText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vestibulum vitae est quis vehicula. Sed ut dui a mi sagittis dictum. Donec commodo rhoncus posuere. Morbi egestas ac odio faucibus finibus. Sed venenatis euismod sagittis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas scelerisque sem ut lacinia tristique. Proin pellentesque, tortor et imperdiet dignissim, nisl orci venenatis lacus, sit amet sagittis diam sapien sit amet leo. Suspendisse egestas bibendum orci et fermentum.";
 
+
 export class Game {
-    private readonly gameText: GameText;
+    private readonly startButton: Element|null;
+
 
     constructor() {
-        this.gameText = new GameText();
+        this.startButton = document.getElementById('start-button');
+        this.initialize();
     }
 
     public initialize(): void {
-        this.gameText.setWords(testText);
-        Game.setupGameBoard(this.gameText);
+        this.setupStartButton();
     }
 
-    private static setupGameBoard(gameText: GameText): void {
-        const gameBoard = document.getElementById('typing-test');
-        if (!gameBoard) return;
-        const wordsContainer = gameBoard?.querySelector('#words');
+    public setupStartButton(): void {
+        this.startButton?.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.startButton?.classList.add('hidden');
 
-        gameText.getWords().forEach(word => {
-            this.setupWord(wordsContainer, word);
+            const game = new GameInstance();
+
+            game.initialize();
         })
-        this.setupInput(gameBoard);
-
-    }
-
-    public static setupWord(wordsContainer: Element|null, word: Word): void {
-        const wordElement = document.createElement('div');
-        wordElement.classList.add('word');
-        wordsContainer?.appendChild(wordElement);
-        word.getLetters().forEach(letter => {
-            this.setupLetter(wordElement, letter);
-        })
-    }
-
-    public static setupLetter(wordElement: Element, letter: string): void {
-        const letterElement = document.createElement('letter');
-        letterElement.innerText = letter;
-        wordElement.appendChild(letterElement);
-    }
-
-    public static setupInput(gameBoard: Element|null): void {
-        const inputElement = gameBoard?.querySelector('textarea');
     }
 }
