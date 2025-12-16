@@ -21,9 +21,9 @@ export class Game {
             e.preventDefault();
             this.startButton?.classList.add('hidden');
 
-            const game = new GameInstance();
+            const gameInstance = new GameInstance();
 
-            game.initialize();
+            gameInstance.start();
         })
     }
 }
