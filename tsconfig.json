@@ -2,7 +2,8 @@
   "compilerOptions": {
     "target": "es2016",
     "module": "ES2015",
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,

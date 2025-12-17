@@ -1,17 +1,10 @@
-import {Word} from "./Word";
+import {Word} from "./Word.ts";
 
 export class GameText {
     private readonly words: Word[];
 
     constructor() {
         this.words = [];
-    }
-
-    public static create(text: string): GameText {
-        const gameText = new GameText();
-        gameText.setWords(text);
-
-        return gameText;
     }
 
     public getWords(): Word[] {
@@ -31,5 +24,11 @@ export class GameText {
 
             this.words.push(space);
         });
+    }
+
+    public static create(text: string) {
+        const newGameText = new GameText();
+        newGameText.setWords(text);
+        return newGameText;
     }
 }
