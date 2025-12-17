@@ -30,9 +30,25 @@
     </header>
     <section class="flex justify-center items-center container mx-auto my-3 text-white h-screen max-h-screen">
         <div class="flex flex-col justify-center items-center grow min-h-[700px] m-auto rounded-lg border border-gray-300 bg-gray-100 p-6 dark:border-gray-600 dark:bg-gray-800">
-            <h2 class="text-2xl mb-1">Typing game</h2>
-            <p class="mb-4">Press start and test your speed!</p>
-            <div id="clock"></div>
+            <div class="p-4 flex flex-col gap-2 items-center">
+                <h2 class="text-2xl mb-1">Typing game</h2>
+                <p class="mb-4">Press start and test your speed!</p>
+                <div id="clock" class="flex px-6 py-4 bg-indigo-200 rounded-sm text-center items-center text-black text-xl font-bold">-</div>
+                <div class="flex gap-2">
+                    <div class="flex gap-2">
+                    <span>
+                        WPM:
+                    </span>
+                        <span id="wpm"></span>
+                    </div>
+                    <div class="flex gap-2">
+                    <span>
+                        Accuracy:
+                    </span>
+                        <span id="accuracy"></span>
+                    </div>
+                </div>
+            </div>
             <div id="typing-test" class="relative border-2 border-gray-600 p-10 rounded-lg text-xl leading-12">
                 <div class="words-wrapper relative p-10">
                     <textarea id="words-input" class="absolute hidden h-[20px] resize-none opacity-0">|</textarea>

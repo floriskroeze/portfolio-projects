@@ -17,8 +17,14 @@ export class GameClock {
             }
 
             this.decrementTime();
-            return this.clockElement.innerHTML = `${this.getTimeLeft()}`;
+            return this.setClockElementTime(this.timeLeft);
         }, 1000);
+    }
+
+    public setClockElementTime(time: number): void {
+        if(!this.clockElement) return;
+
+        this.clockElement.innerHTML = `${time}`
     }
 
     private stop(): void {

@@ -6,11 +6,13 @@ const testText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras 
 
 
 export class GameInstance {
-    public   readonly gameBoard: GameBoard;
-    public readonly GAME_TIME = 120;
+    public readonly gameBoard: GameBoard;
+    public readonly GAME_TIME = 20;
     public gameClock = new GameClock();
     public currentWordIndex = 0;
     public currentLetterIndex = 0;
+    public mistakeCount: number = 0;
+    public totalCharactersTyped: number = 0;
 
     constructor() {
         this.gameBoard = new GameBoard();
@@ -20,9 +22,5 @@ export class GameInstance {
         this.gameBoard.setGameText(GameText.create(testText));
         this.gameBoard.initialize();
         this.gameClock.start();
-    }
-
-    public end(): void {
-
     }
 }
