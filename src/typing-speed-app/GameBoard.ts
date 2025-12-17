@@ -1,5 +1,4 @@
 import {Word} from "./Word.ts";
-import {GameInstance} from "./GameInstance.ts";
 import {GameText} from "./GameText.ts";
 
 export type GameBoardWord = {
@@ -8,13 +7,15 @@ export type GameBoardWord = {
 }
 
 export class GameBoard {
-    private readonly boardElement: Element|null;
+    public readonly boardElement: Element|null;
+    private readonly inputElement: HTMLElement;
     private gameText: GameText;
     public renderedWords: GameBoardWord[] = [];
 
     constructor() {
         this.gameText = new GameText();
         this.boardElement = document.getElementById('typing-test');
+        this.inputElement = document.querySelector('textarea') as HTMLElement;
     }
 
     public setGameText(gameText: GameText) {
@@ -25,13 +26,17 @@ export class GameBoard {
         return this.gameText;
     }
 
-    public initialize(handleKeyPress: (keyStroke: string) => void): void {
+    public initialize(): void {
         this.setupGameBoard();
-        this.setupInput(handleKeyPress);
     }
 
     private setupGameBoard(): void {
         if (!this.boardElement) return;
+
+        this.boardElement.addEventListener('click', () => {
+            this.inputElement.focus();
+        })
+
         const wordsContainer = this.boardElement?.querySelector('#words');
 
         this.gameText.getWords().forEach((word, index) => {
@@ -60,14 +65,5 @@ export class GameBoard {
         const letterElement = document.createElement('letter');
         letterElement.innerText = letter;
         return letterElement
-    }
-
-    public setupInput(handleKeyDown: (keyStroke: string) => void): void {
-        const inputElement = this.boardElement?.querySelector('textarea');
-        inputElement?.classList.remove('hidden');
-        inputElement?.focus();
-        inputElement?.addEventListener('keydown', (e) => {
-            handleKeyDown(e.key);
-        })
     }
 }

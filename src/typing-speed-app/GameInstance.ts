@@ -5,10 +5,10 @@ const testText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras 
 
 
 export class GameInstance {
-    private readonly gameBoard: GameBoard;
-    private readonly GAME_TIME = 120;
-    private currentWordIndex = 0;
-    private currentLetterIndex = 0;
+    public   readonly gameBoard: GameBoard;
+    public readonly GAME_TIME = 120;
+    public currentWordIndex = 0;
+    public currentLetterIndex = 0;
 
     constructor() {
         this.gameBoard = new GameBoard();
@@ -16,32 +16,6 @@ export class GameInstance {
 
     public start(): void {
         this.gameBoard.setGameText(GameText.create(testText));
-        this.gameBoard.initialize(this.handleKeyDown);
-    }
-
-    public handleKeyDown(keyStroke: string): void {
-        if(keyStroke === 'Shift') return;
-
-        const currentWord = this.gameBoard.getGameText().getWords()[this.currentWordIndex];
-        const currentLetter = currentWord.getLetters()[this.currentLetterIndex];
-        const letterElement = this.gameBoard.renderedWords[this.currentWordIndex].letterElements[this.currentLetterIndex];
-
-        if (this.checkPressedKey(keyStroke, currentLetter)) {
-            letterElement.classList.add('text-green-500');
-        } else {
-            letterElement.classList.add('text-red-500');
-        }
-
-        if (this.currentLetterIndex === currentWord.getLetters().length - 1) {
-            this.currentWordIndex++;
-            this.currentLetterIndex = 0;
-            return;
-        }
-
-        this.currentLetterIndex++;
-    }
-
-    public checkPressedKey(keyStroke: string, currentLetter: string): boolean {
-        return (currentLetter === keyStroke);
+        this.gameBoard.initialize();
     }
 }
