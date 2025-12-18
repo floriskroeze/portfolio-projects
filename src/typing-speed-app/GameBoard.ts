@@ -66,4 +66,13 @@ export class GameBoard {
         letterElement.innerText = letter;
         return letterElement
     }
+
+    public clearBoard(): void {
+        this.renderedWords = [];
+        const wordsElement = this.boardElement?.querySelector('#words');
+        if(!wordsElement) return;
+        while (wordsElement.firstChild) {
+            wordsElement.removeChild(wordsElement.firstChild);
+        }
+    }
 }

@@ -1,69 +1,60 @@
-import {GameInstance} from "./GameInstance.ts";
+import {GameInstance} from "./gameinstance/GameInstance.ts";
 import {GameBoard} from "./GameBoard.ts";
+import {ScoreBoard} from "./score/ScoreBoard.ts";
+import {Score} from "./score/Score.ts";
 
 const testText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vestibulum vitae est quis vehicula. Sed ut dui a mi sagittis dictum. Donec commodo rhoncus posuere. Morbi egestas ac odio faucibus finibus. Sed venenatis euismod sagittis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas scelerisque sem ut lacinia tristique. Proin pellentesque, tortor et imperdiet dignissim, nisl orci venenatis lacus, sit amet sagittis diam sapien sit amet leo. Suspendisse egestas bibendum orci et fermentum.";
 
 
 export class Game {
     private readonly startButton: Element|null;
-    private readonly inputElement: Element|null;
+    private readonly resetButton: Element|null;
+    private inputElement: Element|null;
     private gameInstance: GameInstance;
     private intervalID: number|undefined;
 
     constructor() {
         this.gameInstance = new GameInstance();
         this.startButton = document.getElementById('start-button');
+        this.resetButton = document.getElementById('reset-button');
         this.inputElement = document.querySelector('textarea');
         this.initialize();
     }
 
     public initialize(): void {
         this.setupStartButton();
+        this.setupResetButton();
     }
 
     public startGame(): void {
-        this.gameInstance.gameClock.setClockElementTime(this.gameInstance.GAME_TIME);
+        this.gameInstance = new GameInstance();
+        this.gameInstance.clock.setClockElementTime(this.gameInstance.GAME_TIME);
         this.gameInstance.start();
         this.setupInput();
+        this.showScoreBoard();
 
         this.intervalID = setInterval(() => {
-            if (this.gameInstance.gameClock.getTimeLeft() === 0) {
+            if (this.gameInstance.clock.getTimeLeft() === 0) {
                 this.endGame();
             }
         }, 1000)
     }
 
     public endGame(): void {
-        this.displayResults(this.calculate());
+        ScoreBoard.displayResults(Score.calculate(this.gameInstance.mistakeCount, this.gameInstance.totalCharactersTyped, this.gameInstance.GAME_TIME));
         clearInterval(this.intervalID);
+        this.hideClock();
+        this.resetInputField();
+        this.gameInstance.gameBoard.clearBoard();
+        this.resetButton?.classList.remove('hidden');
+    }
+
+    public resetInputField(): void {
         if(!this.inputElement) return;
+
         const newInputElement = this.inputElement.cloneNode(true) as HTMLElement;
         this.inputElement.replaceWith(newInputElement);
-    }
-
-    public calculate() {
-        const accuracy = Game.calculateAccuracy(this.gameInstance.mistakeCount, this.gameInstance.totalCharactersTyped).toFixed(2);
-        const wpm = Game.calculateWordsPerMinute(this.gameInstance.totalCharactersTyped, (this.gameInstance.GAME_TIME / 60)).toFixed(2);
-        return {
-            wpm,
-            accuracy
-        }
-    }
-
-    public static calculateAccuracy(mistakeCount: number, totalCharactersTyped: number): number {
-        return 100 - ((mistakeCount / totalCharactersTyped) * 100);
-    }
-
-    public static calculateWordsPerMinute(totalCharactersTyped: number, gameTime: number): number {
-        return (totalCharactersTyped / 5) / (gameTime);
-    }
-
-    public displayResults(results: {wpm: string, accuracy: string}): void {
-        const wpmElement = document.getElementById('wpm');
-        const accuracyElement = document.getElementById('accuracy');
-        if (!wpmElement || !accuracyElement) return;
-        wpmElement.innerHTML = results.wpm.toString();
-        accuracyElement.innerHTML = results.accuracy.toString() + '%';
+        this.inputElement = newInputElement;
     }
 
     public setupStartButton(): void {
@@ -72,6 +63,15 @@ export class Game {
             this.startButton?.classList.add('hidden');
             this.startGame();
         })
+    }
+
+    public setupResetButton(): void {
+        this.resetButton?.addEventListener('click', (e) => {
+            e.preventDefault();
+            ScoreBoard.clearResults();
+            this.resetButton?.classList.add('hidden');
+            this.startGame();
+        });
     }
 
     public setupInput(): void {
@@ -111,5 +111,17 @@ export class Game {
 
     public checkPressedKey(keyStroke: string, currentLetter: string): boolean {
         return (currentLetter === keyStroke);
+    }
+
+    public showScoreBoard(): void {
+        const scoreBoardElement = document.getElementById('score-board');
+        const clockWrapperElement = document.getElementById('clock-wrapper');
+        scoreBoardElement?.classList.remove('hidden');
+        clockWrapperElement?.classList.remove('hidden');
+    }
+
+    public hideClock(): void {
+        const clockWrapperElement = document.getElementById('clock-wrapper');
+        clockWrapperElement?.classList.add('hidden');
     }
 }

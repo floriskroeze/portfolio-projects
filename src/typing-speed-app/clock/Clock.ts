@@ -1,4 +1,4 @@
-export class GameClock {
+export class Clock {
     private readonly clockElement: Element|null;
     private timeLeft = 20;
     private intervalID: number|undefined;
